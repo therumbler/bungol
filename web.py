@@ -2,6 +2,9 @@ from aiohttp import web
 
 from bungol import Bungol, BungolProperty
 
+with open("./bungol/templates/index.html") as f:
+    HTML_TEMPLATE = f.read()
+
 
 async def index(request):
     kwargs = {
@@ -12,7 +15,8 @@ async def index(request):
         resp: BungolProperty = await bungol.get_property(**kwargs)
     if not resp:
         return web.HTTPNotFound(text="propery not found")
-    html = resp.to_html()
+    content = resp.to_html()
+    html = HTML_TEMPLATE.format(content=content)
     return web.Response(content_type="text/html", text=html)
 
 
