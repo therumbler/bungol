@@ -22,7 +22,7 @@ async def index(request):
     if not resp:
         return web.HTTPNotFound(text="propery not found")
     content = resp.to_html()
-    html = HTML_TEMPLATE.format(content=content, title=resp.info["street_name"])
+    html = HTML_TEMPLATE.format(content=content, title=resp.info["street"])
     return web.Response(content_type="text/html", text=html)
 
 
