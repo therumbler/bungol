@@ -37,15 +37,18 @@ class BungolProperty:
 
     def to_html(self):
         """this is a bit silly, but I'm using an f-string to create HMTL."""
-        logger.error(self.info)
         sold_price = "N/A"
         if self.info["sold_price"]:
             sold_price = f"${self.info['sold_price']:,}"
+
+        list_price = f"${self.info['list_price']:,}"
         return f"""<div class="property">
         <h2>{self.info['street']} {self.info["city"]}</h2>
         
         <h3 class="client-remarks">{self.info["client_remarks"]}</h3>
-        <h3>Sold Price: {sold_price}</h3>
+        <h4>List Price: {list_price}</h4>
+        <h4>Sold Price: {sold_price}</h4>
+        
         <div class="images">
         {' '.join(self._image_html_list())}
         </div>
