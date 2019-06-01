@@ -1,5 +1,9 @@
-from typing import Optional, List
 from dataclasses import dataclass
+import logging
+from typing import Optional, List
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -26,15 +30,22 @@ class BungolProperty:
         ]
 
     def _image_html_list(self):
-        return [f'<img src="{u}" />' for u in self.image_urls]
+        list = [f'<img src="{u}" />' for u in self.image_urls]
+        if not list:
+            logger.error("no images")
+        return list
 
     def to_html(self):
         """this is a bit silly, but I'm using an f-string to create HMTL."""
+        logger.error(self.info)
+        sold_price = "N/A"
+        if self.info["sold_price"]:
+            sold_price = f"${self.info['sold_price']:,}"
         return f"""<div class="property">
         <h2>{self.info['street']} {self.info["city"]}</h2>
         
         <h3 class="client-remarks">{self.info["client_remarks"]}</h3>
-        <h3>Sold Price: ${self.info["sold_price"]:,}</h3>
+        <h3>Sold Price: {sold_price}</h3>
         <div class="images">
         {' '.join(self._image_html_list())}
         </div>
