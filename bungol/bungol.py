@@ -28,9 +28,12 @@ class Bungol:
         await self.session.close()
 
     async def search(self, value: str) -> dict:
-        url = "https://www.bungol.ca/api/property-search-autocomplete/"
-        params = {"value": value}
+        url = "https://www.bungol.ca/api/property-search-autocomplete"
+        url = 'https://www.bungol.ca/api/address-search-autocomplete'
+        params = {"value": value, 'unitValue': ''}
         async with self.session.get(url, params=params) as resp:
+            if resp.status >= 400:
+                logger.error('response error %s', resp.status)
             return await resp.json()
 
     @staticmethod

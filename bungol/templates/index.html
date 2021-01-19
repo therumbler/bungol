@@ -3,7 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{title}</title>
+    <title>Bungol Search</title>
     <style>
         #container {{
             max-width: 840px;
@@ -15,9 +15,71 @@
         }}
     </style>
 </head>
-
 <body>
-    <div id="container">{content}</div>
-</body>
+    <div id="container">
+    
+        <h1>Bungol</h1>
+        <form id="search">
+            <input type="text" placeholder="Search term" id="value"/>
+        </form>
+        <ul id="listings"></ul>
+    </div>
+    <script>
+    var form = document.querySelector('#search');
+    var valueElement = document.querySelector('#value');
+    var listingElement = document.querySelector('#listings');
 
+
+    function formatPrice(price){
+
+    }
+    function processListing(listing){
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        var span = document.createElement('span');
+        var text;
+        if(listing.unit){
+            text = listing.unit +' - ' + listing.street +' ' + listing.city;
+        } else {
+            text = listing.street +' ' + listing.city;
+        }
+        a.href = listing.mls_number + '-' + listing.id;
+        a.innerText = text;
+
+        try {
+            span.innerText = ' listed: $' + listing.list_price.toString();
+        } catch(err) {
+            console.error('no price for', listing);
+            return
+        }
+        if (listing.sold_price){
+            span.innerText = span.innerText + ' sold : $' + listing.sold_price.toString();
+        }
+        li.appendChild(a);
+        li.appendChild(span);
+
+        listingElement.appendChild(li);
+    }
+    function processSearch(resp){
+        listingElement.innerHTML = '';
+        resp.listings.forEach(function(listing){
+            processListing(listing);
+        });
+    }
+    async function doSearch(){
+        var value = document.querySelector('#value').value;
+        if(value.length < 2){
+            return
+        }
+        console.log('searching for', value);
+        var url = './search?value=' + encodeURIComponent(value);
+        var resp = await fetch(url);
+        var respJson = await resp.json();
+        console.log(respJson);
+        processSearch(respJson);
+    }
+    form.addEventListener('submit', doSearch);
+    valueElement.addEventListener('input', doSearch);
+    </script>
+</body>
 </html>

@@ -42,8 +42,12 @@ class BungolProperty:
             sold_price = f"${self.info['sold_price']:,}"
 
         list_price = f"${self.info['list_price']:,}"
+        if self.info["unit"]:
+            title = self.info["unit"] + '-' + self.info["street"]
+        else:
+            title = self.info["street"]
         return f"""<div class="property">
-        <h2>{self.info['street']} {self.info["city"]}</h2>
+        <h2>{title}, {self.info["city"]}</h2>
         
         <h3 class="client-remarks">{self.info["client_remarks"]}</h3>
         <h4>List Price: {list_price}</h4>
